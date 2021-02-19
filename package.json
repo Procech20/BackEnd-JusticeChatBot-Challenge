@@ -1,0 +1,24 @@
+{
+  "name": "nodejs-stack-app",
+  "version": "1.0.0",
+  "description": "A progressive nodejs express api for backend skills development and learning testing.",
+  "main": "main.js",
+  "scripts": {
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "BackEnd-JusticeChatBot-Challenge"
+  },
+  "keywords": [
+    "Justice",
+    "ChatBot"
+  ],
+  "author": "Procech",
+  "license": "MIT",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.7"
+  }
+}
