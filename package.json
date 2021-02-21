@@ -2,13 +2,16 @@
   "name": "nodejs-stack-app",
   "version": "1.0.0",
   "description": "A progressive nodejs express api for backend skills development and learning testing.",
-  "main": "main.js",
+  "main": "server.js",
   "scripts": {
-    "test": ""
+    "test": "",
+    "build": "babel src -d lib",
+    "start": "nodemon --exec babel-node src/server",
+    "dev": "nodemon src/server"
   },
   "repository": {
     "type": "git",
-    "url": "BackEnd-JusticeChatBot-Challenge"
+    "url": "https://www.github.com/Procech20/BackEnd-JusticeChatBot-Challenge"
   },
   "keywords": [
     "Justice",
@@ -17,8 +20,21 @@
   "author": "Procech",
   "license": "MIT",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",
-    "morgan": "^1.10.0",
+    "crossenv": "0.0.2-security",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "joi": "^17.4.0",
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.17",
+    "@babel/core": "^7.12.17",
+    "@babel/node": "^7.12.17",
+    "@babel/preset-env": "^7.12.17",
+    "jshint": "^2.12.0",
     "nodemon": "^2.0.7"
   }
 }
