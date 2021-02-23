@@ -1,9 +1,10 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const colors = require('colors')
+import express from'express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import colors from 'colors';
 
 //Route files
-const blogs = require('./routes/blog')
+import blogs from './App/routes/blog';
 
 //Load env vars
 dotenv.config();
@@ -11,9 +12,11 @@ dotenv.config();
 //Initialising the app with express
 const app = express();
 
+//Mounting app-level middleware
+app.use(cors());
+
 //Mounting routers
 app.use('/api/v1/techblogs', blogs);
-
 
 const PORT = process.env.PORT || 5000;
 
