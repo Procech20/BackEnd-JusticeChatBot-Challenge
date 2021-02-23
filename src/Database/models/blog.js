@@ -1,5 +1,9 @@
 module.exports = (sequelize, Sequelize) => {
     const Post = sequelize.define ("post", {
+        userId: { 
+            type: Sequelize.INTEGER,
+            required: false
+        },
         tittle: {
             type: Sequelize.STRING,
             required: [true, 'Please add a tittle!']
@@ -11,14 +15,6 @@ module.exports = (sequelize, Sequelize) => {
         photo: {
             type: Sequelize.STRING,
             default: 'no-photo.jpg'
-        },
-        CreatedAt: {
-            type: Sequelize.Date,
-            default: Date.now
-        },
-        UpdatedAt: {
-            type: Sequelize.Date,
-            default: Date.now
         }
 
     });

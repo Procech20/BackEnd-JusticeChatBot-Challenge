@@ -23,9 +23,9 @@ app.use(bodyParser.json());
 //Mounting routers
 app.use('/api/v1/techblogs', blogs);
 
-// const db = require('./Database/models/database');
-// db.sequelize.sync();
-//console.log("All models were synchronized successfully.".grey);
+const db = require('./Database/models/database');
+db.sequelize.sync();
+console.log("All models were synchronized successfully.".bold.yellow);
 
 const PORT = process.env.PORT || 5000;
 
