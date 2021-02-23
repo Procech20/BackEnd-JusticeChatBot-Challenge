@@ -1,6 +1,7 @@
 import express from'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import bodyParser from 'body-parser';
 import colors from 'colors';
 
 //Route files
@@ -12,11 +13,19 @@ dotenv.config();
 //Initialising the app with express
 const app = express();
 
-//Mounting app-level middleware
+
+//Mounting CORS middleware
 app.use(cors());
+
+//Parse requests from "application/json" content-type
+app.use(bodyParser.json());
 
 //Mounting routers
 app.use('/api/v1/techblogs', blogs);
+
+// const db = require('./Database/models/database');
+// db.sequelize.sync();
+//console.log("All models were synchronized successfully.".grey);
 
 const PORT = process.env.PORT || 5000;
 
