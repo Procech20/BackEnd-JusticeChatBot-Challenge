@@ -1,21 +1,32 @@
-const express = require('express');
-const { 
-    getBlogs,
-    getBlog,
-    createBlog,
-    updateBlog,
-    deleteBlog 
-} = require('../controllers/blog');
+import { Router } from 'express';
+import Post from '../controllers/blog';
+// import protect from '../middlewares/protect';
+const router = Router();
 
-const router = express.Router();
+router
+    .route('/')
+    .get(Post.findAll)
+    .post( Post.create);
+router
+    .route('/:id')
+    .get( Post.findByPK)
+    .put( Post.update)
+    .delete( Post.delete);
 
-router.route('/')
-    .get(getBlogs)
-    .post(createBlog);
+export default router;
 
-router.route('/:id')
-    .get(getBlog)
-    .put(updateBlog)
-    .delete(deleteBlog);
+// import { Router } from 'express';
+// import Blog from '../controllers/Post';
 
-module.exports = router;
+// const router = Router();
+
+// router.route('/')
+//     .get(Blog.find)
+//     .post(Blog.create);
+
+// router.route('/:id')
+//     .get(Blog.find)
+//     .put(Blog.update)
+//     .delete(Blog.delete);
+
+// export default  router;

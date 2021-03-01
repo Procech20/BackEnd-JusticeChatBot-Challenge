@@ -1,23 +1,37 @@
+import fs from'fs';
+import path from'path';
 import Sequelize from 'sequelize';
-const dbConfig = require('../config/db.config');
+import envConfigs from '../config/db.config.js';
 
-const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
-    host: dbConfig.HOST,
-    dialect: dbConfig.dialect,
+const basename = path.basename(__filename);
+const env = process.env.NODE_ENV || 'development';
+const config = envConfigs[env]
+const db = {};
+console.log(config.dialect);
 
-    pool: {
-        max: dbConfig.pool.max,
-        min: dbConfig.pool.min,
-        acquird: dbConfig.pool.acquire,
-        idle: dbConfig.pool.idle
-    }
+let sequelize;
+if(config.url) {
+  sequelize = new Sequelize(config.url, config);
+} else { sequelize = new Sequelize(config.hostname, config.database, config.username, config.password, config.dialect, config)};
+
+
+fs
+  .readdirSync(__dirname)
+  .filter(file => {
+    return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
+  })
+  .forEach(file => {
+    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+    db[model.name] = model;
+  });
+
+Object.keys(db).forEach(modelName => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
 });
 
-const db = {};
-
-db.Sequelize = Sequelize;
 db.sequelize = sequelize;
-
-db.blog = require("./blog.js")(sequelize, Sequelize);
+db.Sequelize = Sequelize;
 
 module.exports = db;
