@@ -1,38 +1,85 @@
+import successRes from '../utils/succHandler';
+import errorRes from '../utils/errHandler';
+import Models from '../../Database/models/server';
+
+const { Blog } = Models;
+class Blogs {
+
 //@desc  Get all blog posts
 //@route GET /api/v1/techblogs
 //@access Public
-exports.getBlogs = (req, res, next) => {
-    res.status(200).json({ success: true, message: 'Get all blog posts'});
+static async findAll(req, res) {
+    try {
+        const blog = await Blog.findAll();
+        return successRes(res, 200, 'All Blogs retreived successfully', blog);
+    } catch (err) {
+      return errorRes(res, 404, 'Blog not found');
+    }
 };
 
 
 //@desc  Get single blog post
 //@route GET /api/v1/techblogs/:id
 //@access Public
-exports.getBlog = (req, res, next) => {
-    res.status(200).json({ success: true, message: `Get single blog post ${req.params.id}`});
-};
+static async find(req, res) {
+    try {
+      const blog = await Blog.findOne({ where: { id: req.params.id } });
+      return successRes(res, 200, 'successfully retrieved Blog', blog);
+    } catch (error) {
+      return errorRes(res, 404, 'Blog not found');
+    }
+ }
 
 
 //@desc  Create new blog post
 //@route POST /api/v1/techblogs
 //@access Private
-exports.createBlog = (req, res, next) => {
-    res.status(201).json({ success: true, message: 'Create a blog post'});
-};
+static async create(req, res) {
+    try {
+        const { title, description, userId } = req.body;
+
+        const blog = await Blog.create({
+            title,
+            description,
+            userId,
+        });
+        return successRes(res, 201, 'Successfull created Blog', blog);
+        } catch (err) {
+        return errorRes( res, 400, `There was error Blog not created ${err.message}`);
+    }
+}
+
 
 
 //@desc  Update blog post
 //@route PUT /api/v1/techblogs/:id
 //@access private
-exports.updateBlog = (req, res, next) => {
-    res.status(200).json({ success: true, message: `Update blog post ${req.params.id}`});
-};
+static async update(req, res) {
+    try {
+      const blog = await Blog.update(req.body, {
+        where: { id: req.params.id },
+      });
+
+      const updatedBlog = await Blog.findOne({ where: { id: req.params.id } });
+
+      return successRes(res, 201, 'successfully updated Blog', updatedBlog);
+    } catch (err) {
+      return errorRes(res, 404, `no Blog with Id ${req.params.id} found`);
+    }
+}
 
 
 //@desc  Delete blog post
 //@route DELETE /api/v1/techblogs/:id
 //@access Private
-exports.deleteBlog = (req, res, next) => {
-    res.status(200).json({ success: true, message: `Delete blog posts ${req.params.id}`});
-};
+static async delete(req, res) {
+    try {
+      const blog = await Blog.destroy({ where: { id: req.params.id } });
+      return successRes(res, 200, 'Deleted successfully a Blog', blog);
+    } catch (err) {
+      return errorRes(res, 404, `no Blog with Id ${req.params.id} found to be deleted`);
+    }
+  }
+}
+
+export default Blogs;

@@ -4,7 +4,6 @@ module.exports = {
       username: 'admin User',
       email: 'admin@bloger.com',
       password: 'admin123',
-      role: '',
       firstName: 'John',
       lastName: 'Doe',
       createdAt: new Date(),

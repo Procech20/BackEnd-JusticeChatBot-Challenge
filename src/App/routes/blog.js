@@ -1,21 +1,17 @@
-const express = require('express');
-const { 
-    getBlogs,
-    getBlog,
-    createBlog,
-    updateBlog,
-    deleteBlog 
-} = require('../controllers/blog');
+import { Router} from 'express';
+import blog from '../controllers/blog.js';
+import protect from '../middlewares/protect.js'
 
-const router = express.Router();
+
+const router = Router();
 
 router.route('/')
-    .get(getBlogs)
-    .post(createBlog);
+    .get(blog.findAll)
+    .post(blog.create);
 
 router.route('/:id')
-    .get(getBlog)
-    .put(updateBlog)
-    .delete(deleteBlog);
+    .get(blog.find)
+    .put(blog.update)
+    .delete(blog.delete);
 
-module.exports = router;
+export default  router;
