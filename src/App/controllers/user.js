@@ -22,7 +22,7 @@ class Users {
         { id: foundUser.id, email: foundUser.email },
         process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE }
       );
-      return successRes(res, 200, 'User logged in successfully :)', {
+      return successRes(res, 200, 'User login successful :)', {
         token,
         foundUser,
       });
