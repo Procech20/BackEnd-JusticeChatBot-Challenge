@@ -1,17 +1,20 @@
 import { Router } from 'express';
 import auth from '../controllers/auth';
-import { loginValidate, signupValidate } from '../middlewares/validator';
-import protect from '../middlewares/protect';
+import routeValidators from '../middlewares/validator';
+import routeProtection from '../middlewares/token';
+
+const { protect } = routeProtection;
+const { login, logged, register } = auth;
 
 const router = Router();
 
 router.route('/register')
-    .post(signupValidate, auth.register);
+  .post(routeValidators.signupValidate, register);
 
 router.route('/login')
-    .get(loginValidate, auth.login);
+  .get(routeValidators.loginValidate, login);
 
 router.route('/me')
-    .get(protect, auth.logged)
+  .get(protect, logged);
 
-export default router;
+module.exports = router;

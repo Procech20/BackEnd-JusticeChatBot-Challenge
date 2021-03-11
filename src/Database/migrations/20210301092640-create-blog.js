@@ -5,40 +5,40 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER(11)
+        type: Sequelize.INTEGER(11),
       },
       userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        unique: false
+        unique: false,
       },
       title: {
         type: Sequelize.STRING(50),
         allowNull: false,
-        unique: true
+        unique: true,
       },
       description: {
         type: Sequelize.STRING(300),
         allowNull: false,
-        unique: false
+        unique: false,
       },
       photo: {
         type: Sequelize.STRING(600),
         allowNull: true,
         unique: false,
-        default: 'no-photo.jpg'
+        default: 'no-photo.jpg',
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
-  down: async (queryInterface, Sequelize) => {
+  down: async (queryInterface) => {
     await queryInterface.dropTable('Blogs');
-  }
+  },
 };

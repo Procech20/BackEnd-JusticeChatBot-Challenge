@@ -1,5 +1,8 @@
 require('dotenv').config();
-const { DB_DIALECT, DEV_DATABASE_URL, DATABASE_URL, TEST_DATABASE_URL } = process.env;
+
+const {
+  DB_DIALECT, DEV_DATABASE_URL, DATABASE_URL, TEST_DATABASE_URL,
+} = process.env;
 module.exports = {
   development: {
     url: DEV_DATABASE_URL,
@@ -17,5 +20,5 @@ module.exports = {
     use_env_variable: DATABASE_URL,
     logging: false,
     ssl: true,
-  }
+  },
 };

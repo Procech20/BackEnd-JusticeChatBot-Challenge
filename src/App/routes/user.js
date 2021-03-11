@@ -1,17 +1,21 @@
 import { Router } from 'express';
-import { getUsers, createUser, deleteUser, getUser, updateUser } from '../controllers/user';
-import { signupValidate } from '../middlewares/validator';
-import { isAdmin }  from '../middlewares/permission';
-import protect from '../middlewares/protect';
+import userControllers from '../controllers/user';
+import routeValidators from '../middlewares/validator';
+import routeProtection from '../middlewares/token';
+
+const { protect, isAdmin } = routeProtection;
+const {
+  getUsers, createUser, deleteUser, getUser, updatedUser,
+} = userControllers;
 
 const router = Router();
 
 router.route('/')
-    .get(getUsers)
-    .post(isAdmin, protect, signupValidate, createUser);
+  .get(getUsers)
+  .post(protect, isAdmin, routeValidators.signupValidate, createUser);
 router.route('/:id')
-    .get(getUser)
-    .put(protect, updateUser)
-    .delete(protect, deleteUser);
+  .get(getUser)
+  .patch(protect, isAdmin, updatedUser)
+  .delete(protect, isAdmin, deleteUser);
 
 export default router;
