@@ -1,4 +1,4 @@
-import schema  from '../../Database/services/validator';
+import schema  from '../../Database/services/schema';
 import ErrorResponse from '../utils/errorResponse';
 const { blogCreate, blogUpdate, signup, login } = schema;
 

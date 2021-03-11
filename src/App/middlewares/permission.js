@@ -7,7 +7,7 @@ export const isAdmin = asyncHandler(async (req, res, next) => {
   const signedInUser = req.user;
   const user = await findUser({ id: signedInUser.id });
   if (user.role !== 'Admin') {
-    return ErrorResponse(res, 401, 'Only admin and  allowed ');
+    return ErrorResponse(res, 401, 'Only admin allowed to perform such action.');
+  };
   return next();
-};
 });
