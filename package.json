@@ -2,13 +2,21 @@
   "name": "nodejs-stack-app",
   "version": "1.0.0",
   "description": "A progressive nodejs express api for backend skills development and learning testing.",
-  "main": "main.js",
+  "main": "server.js",
   "scripts": {
-    "test": ""
+    "test": "",
+    "dev": "nodemon --exec babel-node src/server",
+    "migrate": "sequelize db:migrate",
+    "migrate:undo": "sequelize db:migrate:undo",
+    "migration": "npm run migrate:undo && npm run migrate",
+    "seed": "npx sequelize db:seed:undo:all && npx sequelize db:seed:all",
+    "seed:test": "cross-env NODE_ENV=test npm run seed",
+    "build": "babel ./src --out-dir build",
+    "start": "npm run seed && npm run build && node build"
   },
   "repository": {
     "type": "git",
-    "url": "BackEnd-JusticeChatBot-Challenge"
+    "url": "https://www.github.com/Procech20/BackEnd-JusticeChatBot-Challenge"
   },
   "keywords": [
     "Justice",
@@ -17,8 +25,30 @@
   "author": "Procech",
   "license": "MIT",
   "dependencies": {
+    "@babel/polyfill": "^7.12.1",
+    "@babel/preset-env": "^7.13.9",
+    "@babel/register": "^7.13.8",
+    "bcryptjs": "^2.4.3",
+    "cli-color": "^2.0.0",
     "colors": "^1.4.0",
+    "dotenv": "^8.2.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.0.0",
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "joi": "^17.4.0",
+    "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
+    "mysql2": "^2.2.5",
+    "sequelize": "^6.5.0",
+    "sequelize-cli": "^6.2.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.13.0",
+    "@babel/core": "^7.13.8",
+    "@babel/node": "^7.13.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-import": "^2.22.1",
     "nodemon": "^2.0.7"
   }
 }
