@@ -1,20 +1,22 @@
-import { Router} from 'express';
-import { getBlogs, getBlog, createBlog, updateBlog, deleteBlog } from '../controllers/blog.js';
-import { createValidate, updateValidate } from '../middlewares/validator'
-import { isAdmin } from '../middlewares/permission'
-import token  from '../middlewares/token'
-import protect from '../middlewares/protect'
+import { Router } from 'express';
+import blogControllers from '../controllers/blog';
+import routeValidators from '../middlewares/validator';
+import routeProtection from '../middlewares/token';
 
+const { protect, isAdmin } = routeProtection;
+const {
+  getBlogs, getBlog, createBlog, updateBlog, deleteBlog,
+} = blogControllers;
 
 const router = Router();
 
 router.route('/')
-    .get(getBlogs)
-    .post(token, isAdmin, protect, createValidate, createBlog);
+  .get(getBlogs)
+  .post(protect, isAdmin, routeValidators.blogValidate, createBlog);
 
 router.route('/:id')
-    .get(getBlog)
-    .put(token, isAdmin, protect, updateValidate, updateBlog)
-    .delete(token, isAdmin, protect, deleteBlog);
+  .get(getBlog)
+  .patch(protect, isAdmin, routeValidators.updateValidate, updateBlog)
+  .delete(protect, isAdmin, deleteBlog);
 
-export default  router;
+export default router;

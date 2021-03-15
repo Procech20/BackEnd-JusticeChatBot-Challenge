@@ -1,6 +1,6 @@
-import ErrorResponse from '../../App/utils/errorResponse';
+import ErrorResponse from '../utils/errorResponse';
 
-const errorHandler = (err, req, res, next) => {
+const errorHandler = (err, req, res) => {
   let error = { ...err };
 
   error.message = err.message;
@@ -10,7 +10,7 @@ const errorHandler = (err, req, res, next) => {
 
   // Mongoose bad ObjectId
   if (err.name === 'CastError') {
-    const message = `Resource not found`;
+    const message = 'Resource not found';
     error = new ErrorResponse(message, 404);
   }
 
@@ -22,13 +22,13 @@ const errorHandler = (err, req, res, next) => {
 
   // Mongoose validation error
   if (err.name === 'ValidationError') {
-    const message = Object.values(err.errors).map(val => val.message);
+    const message = Object.values(err.errors).map((val) => val.message);
     error = new ErrorResponse(message, 400);
   }
 
   res.status(error.statusCode || 500).json({
     success: false,
-    error: error.message || 'Server Error'
+    error: error.message || 'Server Error',
   });
 };
 

@@ -1,25 +1,33 @@
-import schema  from '../../Database/services/validator';
+/* eslint-disable lines-between-class-members */
+import schema from '../helpers/schema';
 import ErrorResponse from '../utils/errorResponse';
-const { blogCreate, blogUpdate, signup, login } = schema;
 
+const {
+  blogCreate, blogUpdate, signup, login,
+} = schema;
 
-export const createValidate = ( req, res, next ) => {
+class routeValidators {
+  static async blogValidate(req, res, next) {
     const { error } = blogCreate.validate(req.body);
-    if(error) { return ErrorResponse(res, 400, `Validaton error: ${error.message.replace(/"/g, '')}`)};
-    next();
-};
-export const updateValidate = ( req, res, next ) => {
+    if (error) { return ErrorResponse(res, 400, `Validaton error: ${error.message.replace(/"/g, '')}`); }
+    return next();
+  }
+
+  static async updateValidate(req, res, next) {
     const { error } = blogUpdate.validate(req.body);
-    if(error) { return ErrorResponse(res, 400 ,`Validaton error: ${error.message.replace(/"/g, '')}`)};
-    next();
-};
-export const loginValidate = ( req, res, next ) => {
+    if (error) { return ErrorResponse(res, 400, `Validaton error: ${error.message.replace(/"/g, '')}`); }
+    return next();
+  }
+  static async loginValidate(req, res, next) {
     const { error } = login.validate(req.body);
-    if(error) { return ErrorResponse(res, 400 ,`Validaton error: ${error.message.replace(/"/g, '')}`)};
-    next();
-};
-export const signupValidate = ( req, res, next ) => {
+    if (error) { return ErrorResponse(res, 400, `Validaton error: ${error.message.replace(/"/g, '')}`); }
+    return next();
+  }
+  static async signupValidate(req, res, next) {
     const { error } = signup.validate(req.body);
-    if(error) { return ErrorResponse(res, 400 ,`Validaton error: ${error.message.replace(/"/g, '')}`)};
-    next();
-};
+    if (error) { return ErrorResponse(res, 400, `Validaton error: ${error.message.replace(/"/g, '')}`); }
+    return next();
+  }
+}
+
+export default routeValidators;
