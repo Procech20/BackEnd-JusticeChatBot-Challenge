@@ -1,6 +1,7 @@
 // eslint-disable-next-line import/no-named-as-default
-const { User } = '../models/server';
+import Models from '../models/server';
 
+const { User } = Models;
 class userServices {
   static async findUser(param) {
     const user = await User.findOne({ where: param });

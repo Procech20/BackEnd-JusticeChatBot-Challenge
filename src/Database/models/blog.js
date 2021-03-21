@@ -10,9 +10,8 @@ module.exports = (sequelize, DataTypes) => {
     userId: { type: DataTypes.INTEGER(11), unique: false, allowedNull: false },
     title: { type: DataTypes.STRING(50), unique: true, allowedNull: false },
     description: { type: DataTypes.STRING(300), unique: false, allowedNull: false },
-    photo: {
-      type: DataTypes.STRING(600), unique: false, allowedNull: true, default: 'no-photo.jpg',
-    },
+    imageUrl: DataTypes.STRING,
+    imageId: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Blog',

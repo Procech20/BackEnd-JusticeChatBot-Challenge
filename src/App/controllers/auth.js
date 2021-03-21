@@ -1,15 +1,18 @@
-import jwt from 'jsonwebtoken';
 import { config } from 'dotenv';
+import userServices from '../../Database/services/user';
 import successRes from '../utils/succHandler';
 import ErrorResponse from '../utils/errorResponse';
-import PwdService from '../helpers/encryption';
 import Models from '../../Database/models/server';
+import encryption from '../helpers/encryption';
 
 config();
 
 const { User } = Models;
 
-class auth {
+const { findUser } = userServices;
+const { signToken, hashPassword, checkPassword } = encryption;
+
+class Auth {
   // @desc     User register
   // @route    GET /api/v1/techblogs/auth/register
   // access    Public,
@@ -17,21 +20,21 @@ class auth {
   static async register(req, res, next) {
     try {
       const {
-        firstName, lastName, email, password, username,
+        firstName, lastName, email, password, username, role, id,
       } = req.body;
-      const hash = await PwdService.hashPassword(password);
-
+      const existing = await findUser({ email: req.body.email });
+      if (existing) return ErrorResponse(res, 400, 'User already exists');
       const user = await User.create({
+        id,
         username,
         firstName,
         lastName,
         email,
-        password: hash,
+        password: hashPassword(password),
+        role,
       });
-
       return successRes(res, 201, 'Successfully Registered a user', user);
     } catch (err) {
-      console(err.message);
       return next(new ErrorResponse(res, 500, `Ooops! Unable to register User :( ..... ${err.message}`));
     }
   }
@@ -42,11 +45,15 @@ class auth {
   static async logged(req, res, next) {
     try {
       const { user } = req;
-      if (!user) return next(new ErrorResponse(res, 404, 'Ooops! looks like there are no logged in user :('));
-      return successRes(res, 200, 'User is logged in!', user);
+      const {
+        id, username, email, firstName, lastName,
+      } = user;
+      const data = {
+        id, username, email, firstName, lastName,
+      };
+      return successRes(res, 200, 'User is logged in!', data);
     } catch (err) {
-      console.log(err.message.red);
-      return next(new ErrorResponse(res, 500, `Ooops! Error getting user :( ${err.message}`));
+      return next(new ErrorResponse(res, 400, 'Error getting user! Please provide or check the provided token!'));
     }
   }
   // @desc     User login
@@ -57,23 +64,21 @@ class auth {
     try {
       const { email, password } = req.body;
       const foundUser = await User.findOne({ where: { email } });
-      if (!foundUser) return ErrorResponse(res, 404, 'User  Not found');
-      const isMatch = await PwdService.checkPassword(password, foundUser.password);
+      if (!foundUser) return ErrorResponse(res, 404, 'User Not found');
+      const isMatch = checkPassword(password, foundUser.password);
       if (!isMatch) return ErrorResponse(res, 401, 'Invalid password');
 
-      const token = jwt.sign(
+      const token = await signToken(
         { id: foundUser.id, email: foundUser.email },
-        process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE },
       );
       return successRes(res, 200, 'User login successful :)', {
         token,
         foundUser,
       });
     } catch (err) {
-      console.log(err.message);
-      return next(new ErrorResponse(res, 400, `Oh No! Error while logging user :( ${err.message}`));
+      return next(new ErrorResponse(res, 500, `Oh No! Error while logging user :( ${err.message}`));
     }
   }
 }
 
-export default auth;
+export default Auth;

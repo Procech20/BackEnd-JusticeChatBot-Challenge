@@ -22,12 +22,8 @@ module.exports = {
         allowNull: false,
         unique: false,
       },
-      photo: {
-        type: Sequelize.STRING(600),
-        allowNull: true,
-        unique: false,
-        default: 'no-photo.jpg',
-      },
+      ImageUrl: Sequelize.STRING(),
+      imageId: Sequelize.STRING(),
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
