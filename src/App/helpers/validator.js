@@ -3,28 +3,24 @@ import Joi from 'joi';
 const stringRequired = Joi.string().trim().required().max(800);
 const nameSchema = Joi.string().trim().regex(/^[\sA-Za-z]{1,}$/);
 
-const schema = {
+const Schema = {
   blogCreate: Joi.object().keys({
-    userId: Joi.number().required(),
     title: Joi.string().required().trim().min(10)
       .max(50)
       .error(new Error('Please Add a title to your blog of atleast 10 words!')),
     description: Joi.string().required().min(25).max(500)
       .error(new Error('Please describe your blog in atleast 25 words but no longer tan 500 words!')),
-    photo: Joi.string(),
   }),
   blogUpdate: Joi.object().keys({
-    userId: Joi.number(),
     title: Joi.string().trim().min(10).max(50)
       .error(new Error('Title must be atleast 10 words!')),
     description: Joi.string().min(25).max(500)
       .error(new Error('Description must be atleast 25 words but no longer tan 500 words!')),
-    photo: Joi.string(),
   }),
   signup: Joi.object().keys({
     email: Joi.string().required()
       .regex(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'email')
-      .error(new Error('Please Add an email address')),
+      .error(new Error('Please Add a valid email address')),
     firstName: nameSchema
       .error(new Error('firstName can only contain letters')),
     lastName: nameSchema
@@ -44,4 +40,4 @@ const schema = {
   }),
 };
 
-export default schema;
+export default Schema;

@@ -20,7 +20,7 @@ class blogServices {
 
   static async updateBlog(blog, param) {
     const updatedBlog = await Blog.update(blog, {
-      where: [param],
+      where: param,
     });
     return updatedBlog;
   }

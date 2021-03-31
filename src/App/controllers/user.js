@@ -1,20 +1,21 @@
 import successRes from '../utils/succHandler';
 import ErrorResponse from '../utils/errorResponse';
-import PwdService from '../helpers/encryption';
+import encryption from '../helpers/encryption';
 import userServices from '../../Database/services/user';
+
+const { hashPassword } = encryption;
 
 const {
   createUser, deleteOne, findUser, findUsers, updateUser,
 } = userServices;
 
-class userControllers {
+class UserControllers {
   // @desc  Get all Users
   // @route GET /api/v1/techblogs
   // @access Public,
 
-  static async getUsers(req, res, next) {
+  static async getUsers(req, res) {
     const user = await findUsers();
-    if (!user) { return next(new ErrorResponse(res, 404, 'Ooops! Looks like there are no users :(')); }
     return successRes(res, 200, 'All users retreived successfully', user);
   }
   // @desc  Get single User post
@@ -23,7 +24,7 @@ class userControllers {
 
   static async getUser(req, res, next) {
     const user = await findUser({ id: req.params.id });
-    if (!user) { return next(new ErrorResponse(res, 404, `No user found wth the d of: ${req.params.id} :(`)); }
+    if (!user) { return next(new ErrorResponse(res, 404, `No user found with the id of: ${req.params.id} :(`)); }
     return successRes(res, 200, 'successfully retrieved user', user);
   }
   // @desc  Create new User
@@ -31,19 +32,25 @@ class userControllers {
   // @access Private,
 
   static async createUser(req, res) {
-    const {
-      username, email, password, firstName, lastName, role,
-    } = req.body;
-    const hash = await PwdService.hashPassword(password);
-    const user = await createUser({
-      username,
-      email,
-      password: hash,
-      firstName,
-      lastName,
-      role,
-    });
-    return successRes(res, 201, 'Successfull created user', user);
+    try {
+      const {
+        username, email, password, firstName, lastName, role,
+      } = req.body;
+      const existing = await findUser({ email: req.body.email });
+      if (existing) return ErrorResponse(res, 400, 'User already exists');
+      const hash = hashPassword(password);
+      const user = await createUser({
+        username,
+        email,
+        password: hash,
+        firstName,
+        lastName,
+        role,
+      });
+      return successRes(res, 201, 'Successfully created user', user);
+    } catch (err) {
+      return new ErrorResponse(res, 500, `Unable to create user; ${err.message}`);
+    }
   }
   // @desc  Update User
   // @route PUT /api/v1/techblogs/:id
@@ -54,7 +61,7 @@ class userControllers {
     if (!foundUser) { return next(new ErrorResponse(res, 404, `Ooops! No user found with the provided id of: ${req.params.id}`)); }
     const user = await updateUser(req.body, { id: req.params.id });
 
-    if (!user) { return next(new ErrorResponse(res, 404, `No user found wth the id of: ${req.params.id} :(`)); }
+    if (!user) { return next(new ErrorResponse(res, 404, `No user found with the id of: ${req.params.id} :(`)); }
     const updatedUser = await findUser({ id: req.params.id });
 
     return successRes(res, 201, 'successfully updated user', updatedUser);
@@ -64,10 +71,14 @@ class userControllers {
   // @access Private,
 
   static async deleteUser(req, res, next) {
-    const user = await deleteOne({ id: req.params.id });
-    if (!user) { return next(new ErrorResponse(res, 404, `No user found wth the id of: ${req.params.id} :(`)); }
-    return successRes(res, 200, 'Deleted successfully a user', user);
+    try {
+      const user = await deleteOne({ id: req.params.id });
+      if (!user) { return next(new ErrorResponse(res, 404, `No user found with the id of: ${req.params.id} :(`)); }
+      return successRes(res, 200, 'Deleted successfully a user', user);
+    } catch (err) {
+      return new ErrorResponse(res, 500, `Unable to delete user; ${err.message}`);
+    }
   }
 }
 
-export default userControllers;
+export default UserControllers;
