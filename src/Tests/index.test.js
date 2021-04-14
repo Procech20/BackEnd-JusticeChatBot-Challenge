@@ -1,6 +1,7 @@
 import mocha from 'mocha';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
+import path from 'path';
 import app from '../index';
 import { mockBlog } from './mocks/blog.mock';
 import { mockAdmin, wrongEmail, emptyEmail } from './mocks/user.mock';
@@ -66,8 +67,12 @@ describe('Test all validation errors', () => {
   it('should validate blog creation and update.', async () => {
     const dummy = await signin(mockAdmin);
     const { token } = dummy;
-    const re = await chai.request(app).post('/api/v1/blogs').send(mockBlog).set('auth', token);
-    const res = await chai.request(app).post('/api/v1/blogs').send(mockblog).set('auth', token);
+    const re = await chai.request(app).post('/api/v1/blogs').field('title', mockBlog.title).field('description', 'Hmnjb bhknub vyukyu vuykbyvh')
+      .attach('photo', path.resolve(__dirname, './mocks/pro.jpg'))
+      .set('auth', token);
+    const res = await chai.request(app).post('/api/v1/blogs').field('title', 'nggg').field('description', 'Hmnjb bhknub vyukyu vuykbyvh')
+      .attach('photo', path.resolve(__dirname, './mocks/pro.jpg'))
+      .set('auth', token);
     console.log(res.status);
     expect(res.status).to.be.equal(400);
     expect(res.body).to.be.a('object');

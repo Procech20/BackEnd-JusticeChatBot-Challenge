@@ -2,6 +2,7 @@
 import mocha from 'mocha';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
+import path from 'path';
 import { Op } from 'sequelize';
 import Models from '../Database/models/server';
 import app from '../index';
@@ -94,7 +95,7 @@ describe('Testing Blog errors', () => {
     expect(res8.body).to.have.property('success', false);
     expect(res8.body).to.have.property('message', 'No blog found with the id of: jcyv :(');
     const res9 = await chai.request(app)
-      .patch('/api/v1/blogs/jcyv').set('auth', token);
+      .patch('/api/v1/blogs/jcyv').attach('photo', path.resolve(__dirname, './mocks/crop.php.jpg')).set('auth', token);
     expect(res9.status).to.be.equal(404);
     expect(res9.body).to.have.property('message', 'No blog found with the id of: jcyv :(');
     const res10 = await chai.request(app)
