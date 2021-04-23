@@ -31,7 +31,6 @@ describe('Testing Blog routes', () => {
   beforeEach(async () => {
     sandbox.stub(cloudinary, 'upload').resolves({
       url: 'wazaaaaa',
-      public_id: '2345679ljuyggu',
     });
     await Blog.destroy({
       where: { },
@@ -65,7 +64,8 @@ describe('Testing Blog routes', () => {
     expect(res2.body).to.be.a('object');
     expect(res2.body).to.have.property('message', 'successfully retrieved Blog');
     const res3 = await chai.request(app)
-      .patch(`/api/v1/blogs/${res1.body.data.id}`).set('auth', token);
+      .patch(`/api/v1/blogs/${res1.body.data.id}`).attach('photo', path.resolve(__dirname, './mocks/crop.php.jpg'))
+      .set('auth', token);
     expect(res3.status).to.be.equal(201);
     expect(res3.body).to.be.a('object');
     expect(res3.body).to.have.property('success');

@@ -23,7 +23,6 @@ module.exports = {
         unique: false,
       },
       ImageUrl: Sequelize.STRING(),
-      imageId: Sequelize.STRING(),
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -34,7 +33,7 @@ module.exports = {
       },
     });
   },
-  down: async (queryInterface) => {
+  down: async queryInterface => {
     await queryInterface.dropTable('Blogs');
   },
 };

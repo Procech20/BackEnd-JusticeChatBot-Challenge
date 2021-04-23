@@ -20,7 +20,13 @@ class Auth {
   static async register(req, res, next) {
     try {
       const {
-        firstName, lastName, email, password, username, role, id,
+        firstName,
+        lastName,
+        email,
+        password,
+        username,
+        role,
+        id,
       } = req.body;
       const existing = await findUser({ email: req.body.email });
       if (existing) return ErrorResponse(res, 400, 'User already exists');
@@ -35,7 +41,13 @@ class Auth {
       });
       return successRes(res, 201, 'Successfully Registered a user', user);
     } catch (err) {
-      return next(new ErrorResponse(res, 500, `Ooops! Unable to register User :( ..... ${err.message}`));
+      return next(
+        new ErrorResponse(
+          res,
+          500,
+          `Ooops! Unable to register User :( ..... ${err.message}`,
+        ),
+      );
     }
   }
   // @desc     Get current logged in user
@@ -45,15 +57,23 @@ class Auth {
   static async logged(req, res, next) {
     try {
       const { user } = req;
-      const {
-        id, username, email, firstName, lastName,
-      } = user;
+      const { id, username, email, firstName, lastName } = user;
       const data = {
-        id, username, email, firstName, lastName,
+        id,
+        username,
+        email,
+        firstName,
+        lastName,
       };
       return successRes(res, 200, 'User is logged in!', data);
     } catch (err) {
-      return next(new ErrorResponse(res, 400, 'Error getting user! Please provide or check the provided token!'));
+      return next(
+        new ErrorResponse(
+          res,
+          400,
+          'Error getting user! Please provide or check the provided token!',
+        ),
+      );
     }
   }
   // @desc     User login
@@ -68,15 +88,22 @@ class Auth {
       const isMatch = checkPassword(password, foundUser.password);
       if (!isMatch) return ErrorResponse(res, 401, 'Invalid password');
 
-      const token = await signToken(
-        { id: foundUser.id, email: foundUser.email },
-      );
+      const token = await signToken({
+        id: foundUser.id,
+        email: foundUser.email,
+      });
       return successRes(res, 200, 'User login successful :)', {
         token,
         foundUser,
       });
     } catch (err) {
-      return next(new ErrorResponse(res, 500, `Oh No! Error while logging user :( ${err.message}`));
+      return next(
+        new ErrorResponse(
+          res,
+          500,
+          `Oh No! Error while logging user :( ${err.message}`,
+        ),
+      );
     }
   }
 }
